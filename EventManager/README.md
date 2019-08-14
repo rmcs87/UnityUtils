@@ -1,6 +1,6 @@
 # EventManager
 
-This repository contains a EventManger component that implements the Onserver Design Pattern:
+This repository contains an EventManger component that implements the Observer Design Pattern:
 
 "The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents, called observers, and notifies them automatically of any state changes, usually by calling one of their methods." - From Wikipedia
 
@@ -17,17 +17,17 @@ Some disadvantages of the Observer pattern are:
 
 ## How to use it
 
-The **EventManagerUtils** folder contains the **EventManager** and EventInfo classes. You won't need to modify them, but if you want, explore them to understanding better what's going on.
+The **EventManagerUtils** folder contains the **EventManager** and **EventInfo** classes. You won't need to modify them, but if you want, explore them to understanding better what's going on.
 
 First in the Events folder you'll find the **EventNames.cs** . This enumaration contains the names of the events you shall use in your application. Edit it including your events names. 
 
-Then for each Event you can create a Class containing all information about the event. These classes you created shall inherit from EventInfo class (examples can be found in Events folder). If you don't want to personalise the event, just use the EventInfo, as we will talk later. With the event names and our personalizes (or not) events, we can go on.
+Then for each Event you can create a Class containing all information about the event. These classes shall inherit from EventInfo one (examples can be found in Events folder). If you don't want to specialize the event, just use the EventInfo, as we will talk later. With the event names and our personalized (or not) events, we can go on.
 
 Now we need do register our listeners and trigger our events. To register a listener just call:
 ```c#
 EventManager.StartListening(EventNames.EventName1, EventListener1);
 ```
-This will guarantee that when EventNames.EventName1 is triggered, method EventListener1 will be called. Don't forget to include:
+This will guarantee that when EventNames. EventName1 is triggered, method EventListener1 will be called. Don't forget to include:
 
 ```c#
 using EventManagerUtils;
