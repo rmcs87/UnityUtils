@@ -1,53 +1,67 @@
-# New Project Template
+# EventManager
 
-This repository contains a template you can use to seed a repository for a
-new open source project.
+This repository contains a EventManger component that implements the Onserver Design Pattern:
 
-See go/releasing (available externally at
-https://opensource.google.com/docs/releasing/) for more information about
-releasing a new Google open source project.
+"The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents, called observers, and notifies them automatically of any state changes, usually by calling one of their methods." - From Wikipedia
 
-This template uses the Apache license, as is Google's default.  See the
-documentation for instructions on using alternate license.
+The Observer pattern provides you with the following advantages (Learning Python Design Patterns - Second Edition by Chetan Giridhar):
 
-## How to use this template
+1. It supports the principle of loose coupling between objects that interact with each other
+1. It allows sending data to other objects effectively without any change in the Subject or Observer classes
+1. Observers can be added/removed at any point in time
 
-1. Check it out from GitHub.
-    * There is no reason to fork it.
-1. Create a new local repository and copy the files from this repo into it.
-1. Modify README.md and CONTRIBUTING.md to represent your project, not the
-   template project.
-1. Develop your new project!
+Some disadvantages of the Observer pattern are:
+1. Memory leaks caused by Lapsed listener problem because of explicit register and unregistering of observers.
+1. If not correctly implemented, the Observer can add complexity and lead to inadvertent performance issues.
+1. Tests may became harder to apply.
 
-``` shell
-git clone https://github.com/google/new-project
-mkdir my-new-thing
-cd my-new-thing
-git init
-cp ../new-project/* .
-git add *
-git commit -a -m 'Boilerplate for new Google open source project'
+## How to use it
+
+The **EventManagerUtils** folder contains the **EventManager** and EventInfo classes. You won't need to modify them, but if you want, explore them to understanding better what's going on.
+
+First in the Events folder you'll find the **EventNames.cs** . This enumaration contains the names of the events you shall use in your application. Edit it including your events names. 
+
+Then for each Event you can create a Class containing all information about the event. These classes you created shall inherit from EventInfo class (examples can be found in Events folder). If you don't want to personalise the event, just use the EventInfo, as we will talk later. With the event names and our personalizes (or not) events, we can go on.
+
+Now we need do register our listeners and trigger our events. To register a listener just call:
+```c#
+EventManager.StartListening(EventNames.EventName1, EventListener1);
+```
+This will guarantee that when EventNames.EventName1 is triggered, method EventListener1 will be called. Don't forget to include:
+
+```c#
+using EventManagerUtils;
 ```
 
-## Source Code Headers
+The following code is an example of such method. It receives an EventInfo that is casted to our specialized class Event1InfoDataExample, that contains specific data for our event.
+```c#
+private void EventListener1(EventInfo e)
+    {
+        Event1InfoDataExample et = e as Event1InfoDataExample;
+        Debug.Log("Received Event 1 on Listener 1 with data:" + et.Data);
+    }
+```
+Triggering an Event is quite as easy: just instatiate the desired EventInfo, and call the EventManager as listening to it:
+```c#
+        //Instantiate the EvenInfos, in this case, a subclass.
+        Event1InfoDataExample e1 = new Event1InfoDataExample(EventNames.EventName1);
+        e1.Data = 987;        
+        // Trigger Event
+        EventManager.TriggerEvent(e1);
+```
 
-Every file containing source code must include copyright and license
-information. This includes any JS/CSS files that you might be serving out to
-browsers. (This is to help well-intentioned people avoid accidental copying that
-doesn't comply with the license.)
+When you don't need to linten to the observer anymore, remember to unregister your listener:
 
-Apache header:
+```c#
+EventManager.StopListening(EventNames.EventName1, EventListener1);
+```
 
-    Copyright 2019 Google LLC
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+## Example
 
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+1. Import the Package into your Unity Project:
+    * eventManager.unitypackage (https://github.com/rmcs87/UnityUtils/blob/master/EventManager/eventManager.unitypackage)
+1. Add both prefabs to your scen:
+    * EventManager and Example
+1. Execute the scene, and you should see in the console the result of an example.
+1. Jump into the example and explore it.
