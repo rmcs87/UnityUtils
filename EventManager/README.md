@@ -1,7 +1,8 @@
 # EventManager
 
-This repository contains an EventManger component that implements the Observer Design Pattern:
+This repository contains an EventManger component that implements the Observer Design Pattern. It is an adaptation for Unity's EventManager code (https://learn.unity.com/tutorial/create-a-simple-messaging-system-with-events#5cf5960fedbc2a281acd21fa).
 
+# The observer pattern
 "The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents, called observers, and notifies them automatically of any state changes, usually by calling one of their methods." - From Wikipedia
 
 The Observer pattern provides you with the following advantages (Learning Python Design Patterns - Second Edition by Chetan Giridhar):
