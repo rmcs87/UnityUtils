@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 
@@ -43,16 +43,15 @@ public class EventManager : MonoBehaviour
         if (eventDictionary == null)
         {
             eventDictionary = new Dictionary<Type, Action<IEvent>>();
-        }
-        
+        }        
     }
+
     /// <summary>
-    /// Register a Method (listener) to be called when a specific event occurs. 
+    ///Register a Method(listener) to be called when a specific event occurs.
     /// Remember to uregister it when you don't need it anymore.
     /// </summary>
-    /// <param name="eventName">This is the event name from EventNames. Add a new one if necessary.</param>
+    /// <typeparam name="T">The Object IEvent</typeparam>
     /// <param name="listener">The method to be called when the specified event is triggered.</param>
-    ///<remarks>Add a EventName and create a new EventInfo (or something that inherits form it) if necessary.</remarks>
     public static void StartListening<T>(Action<IEvent> listener) where T : IEvent
     {
         Action<IEvent> thisEvent = null;
@@ -68,11 +67,12 @@ public class EventManager : MonoBehaviour
             instance.eventDictionary.Add(typeof(T), thisEvent);
         }
     }
+
     /// <summary>
     /// Unregister a Method (listener) from being called when a specific event occurs.
     /// </summary>
-    /// <param name="eventName">This is the event name from EventNames.</param>
-    /// <param name="listener">The method to stop calling when the specified event is triggered.</param>
+    /// <typeparam name="T">The Object IEvent</typeparam>
+    /// <param name="listener">The method to stop being called when the specified event is triggered.</param>
     public static void StopListening<T>(Action<IEvent> listener) where T : IEvent
     {
         if (instance == null) return;
@@ -85,12 +85,11 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    //public static void TriggerEvent(EventNames eventName, EventInfo eventParam = default)
     /// <summary>
     /// Triggers the Event.
     /// </summary>
-    /// <param name="ei">An intance of EventInfo containing all neccessary information about the event.
-    /// Extend the EventInfo class to personalize an EventInfo for each event tha occurs.</param>
+    /// <typeparam name="T">The Object IEvent</typeparam>
+    /// <param name="ev">An implementation of IEvent containing all neccessary information about the event.</param>
     public static void TriggerEvent<T>(T ev) where T : IEvent
     {
         Action<IEvent> thisEvent = null;
