@@ -3,6 +3,7 @@
 This repository contains an EventManger component that implements the Observer Design Pattern. It is an adaptation for Unity's EventManager code (https://learn.unity.com/tutorial/create-a-simple-messaging-system-with-events#5cf5960fedbc2a281acd21fa).
 
 Also read about C# native Events and Action to find out the better solution for your game.
+1. https://jacksondunstan.com/articles/3335
 
 # The observer pattern
 "The observer pattern is a software design pattern in which an object, called the subject, maintains a list of its dependents, called observers, and notifies them automatically of any state changes, usually by calling one of their methods." - From Wikipedia
