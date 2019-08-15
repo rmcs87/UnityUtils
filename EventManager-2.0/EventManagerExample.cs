@@ -9,8 +9,7 @@ public class EventManagerExample : MonoBehaviour
     {
 
         /*
-         * Make sure you started the EventManager. If you downloaded the package, just
-         * add the GameManager Prefab in the scene.         * 
+         * Make sure you added EventManager to the scene* 
          */
 
         EventManager.StartListening<GPSEvent>(EventListener1);
