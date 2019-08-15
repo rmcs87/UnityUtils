@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This class inherits form EventInfo specifying new values that the event should carry. 
+/// This class implements IEvent specifying new values that the event should carry. 
 /// </summary>
 public class GPSEvent : IEvent
 {    
