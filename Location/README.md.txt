@@ -1,37 +1,54 @@
-# EventManager 2.0
+# Location Scripts
 
-This repository contains an EventManger component that implements the Observer Design Pattern. In this version:
-- Use C# Actions instead of Unity ones;
-- Use Generic Methods to identify the Event Type;
+This repository contains three scripts used to handle Location Services in Unity.
 
-## How to use it
+## DeviceCompass
 
-First in the Events folder you'll find the **EventNames.cs** for each Event you must create a Class that implements the **IEvent** interface. This class will contain all information that your event needs to carry. 
+Adapted from:
+https://answers.unity.com/questions/1361740/trouble-enablingreading-compass-input-on-android.html
 
-Now we need do register our listeners and trigger our events. To register a listener just call:
+It handles the functionalities to get the heading in degrees relative to the geographic North Pole. The value is always measured relative to the top of the screen in its current orientation. 
+
+You shouldn't use the direct value read, but take the median of the last measures using the **GetMedianAngle** method.
 ```c#
-EventManager.StartListening<GPSEvent>(EventListener1);
-```
-**GPSEvent** represents the event and implements **IEvent.**
-This will guarantee that when  we trigger GPSEvent, EventListener1 will be called.
+//Use example
+        float angle = DeviceCompass.Get();
 
-The following code is an example of such method. It receives an IEvent that is casted to our GPSEvent, that contains specific data for our event.
-```c#
-private void EventListener1(IEvent e)
-    {
-        GPSEvent gpe = e as GPSEvent;
-        Debug.Log("Received Event 1 on Listener 1 with data:" + gpe.Coords);
-    }
-```
-Triggering an Event is quite as easy  as listening to it: just instatiate the desired IEvent, and call the EventManager:
-```c#
-GPSEvent2 e2 = new GPSEvent2(8.0f, 5.5f);
-Debug.Log("Sending Event 2:");
-EventManager.TriggerEvent(e2);
+        if (lastAngles.Count > 50)
+        {
+            lastAngles.RemoveAt(0);
+        }
+        lastAngles.Add(angle);
+        Float NorthAngle =   	DeviceCompass.GetMedianAngle(lastAngles); 
 ```
 
-When you don't need to linten to the observer anymore, remember to unregister your listener:
+## DeviceLocation
+
+It handles the GPS sensor, getting the current coordinates of the phone.
+
+Using **GetVirtualPosition** you can convert real world coordinates into Unity Coordinates.
+```c#
+//Use example
+		Coords latlong = DeviceLocation.Get();
+        if (latlong != null)
+        {
+            Vector3 virtualPosition = DeviceLocation.GetVirtualPosition(ZeroCoordinate
+                                                                        , latlong);
+            virtualPosition.y = transform.position.y;
+            transform.position = virtualPosition;
+        }
+```
+
+## DeviceRotation
+
+It handles the Gyro functionalities of the phone. It returns the Quaternion relative to current phone orentation.
+
+In the following example, the script aplied to a Camera will move the camera in the Virtual World according to the phone rotations in the Real World.
 
 ```c#
-EventManager.StopListening<GPSEvent>(EventListener1);
+//Use example
+		Quaternion deviceRotation = DeviceRotation.Get();
+        transform.rotation = deviceRotation;
 ```
+
+
