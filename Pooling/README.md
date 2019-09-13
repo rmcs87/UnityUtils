@@ -1,54 +1,36 @@
-# Location Scripts
+# Object Pooling
 
-This repository contains three scripts used to handle Location Services in Unity.
+The act of instantiating and destroying objects every time is inefficient and can slow projects down. 
 
-## DeviceCompass
+Object pooling uses a set of initialized objects kept ready to use – a "pool" – rather than allocating and destroying them on demand. A client of the pool will request an object from the pool and perform operations on the returned object. 
 
-Adapted from:
-https://answers.unity.com/questions/1361740/trouble-enablingreading-compass-input-on-android.html
+When the client has finished, it returns the object to the pool rather than destroying it; this can be done manually or automatically. (https://en.wikipedia.org/wiki/Object_pool_pattern)
 
-It handles the functionalities to get the heading in degrees relative to the geographic North Pole. The value is always measured relative to the top of the screen in its current orientation. 
-
-You shouldn't use the direct value read, but take the median of the last measures using the **GetMedianAngle** method.
-```c#
-//Use example
-        float angle = DeviceCompass.Get();
-
-        if (lastAngles.Count > 50)
-        {
-            lastAngles.RemoveAt(0);
-        }
-        lastAngles.Add(angle);
-        Float NorthAngle =   	DeviceCompass.GetMedianAngle(lastAngles); 
-```
-
-## DeviceLocation
-
-It handles the GPS sensor, getting the current coordinates of the phone.
-
-Using **GetVirtualPosition** you can convert real world coordinates into Unity Coordinates.
-```c#
-//Use example
-		Coords latlong = DeviceLocation.Get();
-        if (latlong != null)
-        {
-            Vector3 virtualPosition = DeviceLocation.GetVirtualPosition(ZeroCoordinate
-                                                                        , latlong);
-            virtualPosition.y = transform.position.y;
-            transform.position = virtualPosition;
-        }
-```
-
-## DeviceRotation
-
-It handles the Gyro functionalities of the phone. It returns the Quaternion relative to current phone orentation.
-
-In the following example, the script aplied to a Camera will move the camera in the Virtual World according to the phone rotations in the Real World.
+To use this pooling system the Prefab shall have a script that inherances from  **PooledMonoBehaviour**:
 
 ```c#
 //Use example
-		Quaternion deviceRotation = DeviceRotation.Get();
-        transform.rotation = deviceRotation;
+public class Enemy : PooledMonoBehaviour  ...
 ```
 
+To instatiate a object use the Get<T> method from the poole object
 
+```c#
+//Use example
+[SerializeField] private Enemy prefab;
+prefab.Get<Enemy>(position, rotation);
+```
+
+And to return it to the pool:
+
+```c#
+//Use example
+private void Die()
+{
+	ReturnToPool(5f);
+}
+```
+
+In the editor, you can configure the pool size, according to your demands.
+
+**Learned at: Unity Mastery Course – 2018**
